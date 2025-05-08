@@ -3,7 +3,16 @@
 <head>
 	<title>Rekening Koran - Permata Bank</title>
 	<style>
-		body {
+		@page {
+             @bottom-center {
+                 content: "Page " counter(page) " of " counter(pages);
+                 font-size: 12px;
+                 color: gray;
+             }
+
+             margin: 2cm;
+         }
+        body {
             font-family: Arial, sans-serif;
             font-size: 12px;
             margin: 40px;
@@ -48,9 +57,9 @@
 			<span th:text="${unit}">Back Office Development</span>
 		</td>
 		<td>
-			<strong>Periode Laporan</strong>
-			<span th:text="${periode}">01 SEPTEMBER 2024 - 30 SEPTEMBER 2024</span>
-			<strong>Tanggal Laporan</strong>: <span th:text="${tanggalLaporan}">1 OKTOBER 2024</span>
+			<strong>Periode Laporan</strong><br></br>
+			<span>01 MEI 2025 - 2 MEI 2025</span>
+			<br></br>
 			<strong>No. CIF</strong>: <span th:text="${cif}">T026080</span>
 		</td>
 	</tr>
@@ -62,8 +71,8 @@
 			<strong>Mata Uang</strong>: <span th:text="${mataUang}">IDR</span>
 		</td>
 		<td colspan="2">
-			Efektif per 29 September 2024, PermataMobile X resmi berubah nama menjadi PermataME...
-			<a href="https://permata.me/info-biayatransfer">https://permata.me/info-biayatransfer</a>
+			<h4>Pengumuman:</h4>
+			<b><span th:text="${pengumuman}">....</span></b><br></br>
 		</td>
 	</tr>
 </table>
@@ -71,8 +80,8 @@
 <table class="transaction-table">
 	<thead>
 	<tr>
-		<th>Tgl Trx. (dd/mm)</th>
-		<th>Tgl Valuta(dd/mm)</th>
+		<th>Tgl Trx</th>
+		<th>Tgl Post</th>
 		<th>Uraian Trx.</th>
 		<th>Debet</th>
 		<th>Kredit</th>
@@ -95,6 +104,5 @@
 	PermataBank.com | Priority Contact Center 1500-100
 	PT Bank Permata, Tbk terdaftar dan diawasi oleh OJK dan merupakan peserta penjamin LPS.
 </div>
-
 </body>
 </html>

@@ -11,7 +11,6 @@ public class Transaksi {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String tanggalTrx;
     private String tanggalValuta;
     private String uraian;

@@ -1,9 +1,7 @@
 package com.latihan.HtmlPdf.controller;
 
 import com.latihan.HtmlPdf.model.Transaksi;
-import com.latihan.HtmlPdf.model.User;
 import com.latihan.HtmlPdf.service.TransaksiService;
-import com.latihan.HtmlPdf.service.UserService;
 import com.lowagie.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -30,10 +28,8 @@ public class TransaksiController {
     @Autowired
     private SpringTemplateEngine springTemplateEngine;
 
-
-
-    @GetMapping(value = "/generatePdf", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<byte[]> generatePdf() throws IOException, DocumentException {
+    @GetMapping(value = "/generatePdf/{pengumuman}", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> generatePdf(@PathVariable String pengumuman) throws  DocumentException {
         // 1. Data untuk template
         Context context = new Context();
         Map<String, Object> data = new HashMap<>();
@@ -49,6 +45,7 @@ public class TransaksiController {
         context.setVariable("cabang", "SDM KANTOR PUSAT JAKARTA");
         context.setVariable("produk", "Tabungan Karyawan");
         context.setVariable("mataUang", "IDR");
+        context.setVariable("pengumuman", pengumuman);
         context.setVariables(data);
         // 2. Render HTML dari template
         String renderedHtml = springTemplateEngine.process("template", context);
@@ -68,56 +65,14 @@ public class TransaksiController {
                 .body(pdfBytes);
     }
 
-    @GetMapping(value = "/generate")
-    public String generateDocument() {
-
-        String finalHtml = null;
-
-        Context context = new Context();
-        Map<String, Object> data = new HashMap<>();
-        data.put("transaksi",  transaksiService.getAllTransaksi());
-        context.setVariable("nama", "HENDRA SUMARNO");
-        context.setVariable("departemen", "Technology & Operations");
-        context.setVariable("divisi", "Digital Delivery");
-        context.setVariable("unit", "Back Office Development");
-        context.setVariable("periode", "01 SEPTEMBER 2024 - 30 SEPTEMBER 2024");
-        context.setVariable("tanggalLaporan", "1 OKTOBER 2024");
-        context.setVariable("cif", "T026080");
-        context.setVariable("rekening", "1111111111111111");
-        context.setVariable("cabang", "SDM KANTOR PUSAT JAKARTA");
-        context.setVariable("produk", "Tabungan Karyawan");
-        context.setVariable("mataUang", "IDR");
-        context.setVariables(data);
-        finalHtml = springTemplateEngine.process("template", context);
 
 
-//        documentGenerator.htmlToPdf(finalHtml);
-        return "Success";
-    }
-
-    @PostMapping
-    public Transaksi createUser(@RequestBody Transaksi transaksi) {
-        return transaksiService.createTransaksi(transaksi);
-    }
 
     @GetMapping
     public List<Transaksi> getAllTransaksi() {
         return transaksiService.getAllTransaksi();
     }
 
-    @GetMapping("/{id}")
-    public Transaksi getUserById(@PathVariable Long id) {
-        return transaksiService.getTransID(id);
-    }
 
-    @PutMapping("/{id}")
-    public Transaksi updateUser(@PathVariable Long id, @RequestBody Transaksi user) {
-        return transaksiService.updateUser(id, user);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Long id) {
-        transaksiService.deleteTransaksi(id);
-    }
 
 }
