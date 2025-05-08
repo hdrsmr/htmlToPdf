@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="id">
+<head>
+	<title>Rekening Koran - Permata Bank</title>
+	<style>
+		body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin: 40px;
+        }
+        .header, .footer {
+            text-align: center;
+        }
+        .header img {
+            height: 40px;
+        }
+        .info-table, .transaction-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .info-table td, .transaction-table th, .transaction-table td {
+            border: 1px solid #000;
+            padding: 6px;
+        }
+        .transaction-table th {
+            background-color: #e5e5e5;
+        }
+        .note {
+            font-size: 10px;
+            margin-top: 20px;
+        }
+	</style>
+</head>
+<body>
+
+<div class="header">
+	<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Permata_Bank_%282024%29.svg/2560px-Permata_Bank_%282024%29.svg.png" alt="Permata Bank Logo"></img>
+	<h2>Rekening Koran <br><small>Account Statement Priority</small></br></h2>
+</div>
+
+<table class="info-table">
+	<tr>
+		<td>
+			<strong th:text="${nama}">THOMAS LAGADONI</strong><br></br>
+			<span th:text="${departemen}">Technology & Operations</span>
+			<span th:text="${divisi}">Digital Delivery</span>
+			<span th:text="${unit}">Back Office Development</span>
+		</td>
+		<td>
+			<strong>Periode Laporan</strong>
+			<span th:text="${periode}">01 SEPTEMBER 2024 - 30 SEPTEMBER 2024</span>
+			<strong>Tanggal Laporan</strong>: <span th:text="${tanggalLaporan}">1 OKTOBER 2024</span>
+			<strong>No. CIF</strong>: <span th:text="${cif}">T026080</span>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<strong>No. Rekening</strong>: <span th:text="${rekening}">1111111111111111</span><br></br>
+			<strong>Cabang</strong>: <span th:text="${cabang}">SDM KANTOR PUSAT JAKARTA</span>
+			<strong>Nama Produk</strong>: <span th:text="${produk}">Tabungan Karyawan</span>
+			<strong>Mata Uang</strong>: <span th:text="${mataUang}">IDR</span>
+		</td>
+		<td colspan="2">
+			Efektif per 29 September 2024, PermataMobile X resmi berubah nama menjadi PermataME...
+			<a href="https://permata.me/info-biayatransfer">https://permata.me/info-biayatransfer</a>
+		</td>
+	</tr>
+</table>
+
+<table class="transaction-table">
+	<thead>
+	<tr>
+		<th>Tgl Trx. (dd/mm)</th>
+		<th>Tgl Valuta(dd/mm)</th>
+		<th>Uraian Trx.</th>
+		<th>Debet</th>
+		<th>Kredit</th>
+		<th>Saldo</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr th:each="trx : ${transaksi}">
+		<td th:text="${trx.tanggalTrx}">01/01</td>
+		<td th:text="${trx.tanggalValuta}">01/01</td>
+		<td th:text="${trx.uraian}">description ...</td>
+		<td th:text="${trx.debet}">1,000.00</td>
+		<td th:text="${trx.kredit}">-</td>
+		<td th:text="${trx.saldo}">20,000,000.00</td>
+	</tr>
+	</tbody>
+</table>
+
+<div class="note">
+	PermataBank.com | Priority Contact Center 1500-100
+	PT Bank Permata, Tbk terdaftar dan diawasi oleh OJK dan merupakan peserta penjamin LPS.
+</div>
+
+</body>
+</html>
