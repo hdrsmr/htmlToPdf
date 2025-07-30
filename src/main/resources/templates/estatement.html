@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <style>
+        @page {
+            size: A4;
+            margin-top: 10cm;
+            margin-bottom: 2cm;
+            @top-center {
+                content: element(header);
+            }
+
+            @bottom-center {
+                content: element(footer);
+            }
+        }
+
+        .page::after {
+          content: counter(page);
+            font-weight: bold;
+            font-size: 8px;
+        }
+
+        .pages::after {
+          content: counter(pages);
+            font-weight: bold;
+            font-size: 8px;
+        }
+
+        #header {
+            position: running(header); /* untuk header */
+            height: 400px;
+            padding-bottom: 10px;
+        }
+
+        #footer {
+          display: block;
+          position: running(footer); /* untuk footer */
+        }
+
+        .content {
+            page-break-inside: avoid;
+        }
+
+        /* Ganti flex container dengan display: block */
+        .container {
+            display: block; /* flex -> block */
+        }
+
+        /* Gunakan table layout untuk row */
+        .row1 {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        .box1, .box2 {
+            display: table-cell;
+            width: 50%;
+            vertical-align: middle;
+        }
+
+        .tbl1, .tbl2, .tbl3 {
+            display: table-cell;
+            width: 50%;
+            vertical-align: middle;
+        }
+
+        .tbl1f, .tbl2f, .tbl3f{
+          display: table-cell;
+          width: auto;
+          vertical-align: middle;
+        }
+
+        /* Ganti flex di box3 dengan table-cell dan text-align center */
+        .box3 {
+            display: table-cell; /* flex -> table-cell */
+            width: 7%; /* dari flex: 0 0 7% */
+            border: 1px solid #EDEDED;
+            text-align: center;
+            vertical-align: middle;
+            background-color: #EDEDED;
+        }
+
+        /* Ganti flex di box4 dengan table-cell */
+        .box4 {
+            display: table-cell;
+            width: 15%; /* dari flex: 0 0 15% */
+            text-align: center;
+            vertical-align: middle;
+            padding-top: 10px;
+        }
+
+        .text-label10bold {
+            font-family: sans-serif;
+            font-weight: bold;
+            font-size: 8px;
+        }
+
+        .text-label10 {
+            font-family: sans-serif;
+            font-size: 8px;
+        }
+
+        .text-label12 {
+            font-family: sans-serif;
+            color: #756E6E;
+            font-size: 12px;
+        }
+
+        .text-content12 {
+            font-family: sans-serif;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .text-content14 {
+            font-family: sans-serif;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        thead {
+            background: #f2f2f2;
+            display: table-header-group;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 12px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            font-weight: bold;
+            color: #555;
+        }
+
+        td {
+            color: #222;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        .align-right {
+            text-align: right;
+        }
+
+        .font-kecil {
+            font-size: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- Static Header -->
+<div id="header">
+    <div class="container">
+        <!--        <div style=" width: 50%; float: left; border: 1px solid yellow;">-->
+        <!--            <img th:src="${logoBase64}" alt="Permata Logo" width="120"/>-->
+        <!--        </div>-->
+        <!--        <div style="width: 50%; float: left; text-align: right; border: 1px solid yellow;">-->
+        <!--            <h2>Consolidated e-Statement</h2>-->
+        <!--            <h6>Asset Detail</h6>-->
+        <!--        </div>-->
+        <div class="row1">
+            <div class="box1" style="text-align: left;">
+                <img th:src="${logoBase64}" alt="Permata Logo" width="200px"/>
+            </div>
+            <div class="box2" style="text-align: right;">
+
+                <h2>Consolidated e-Statement</h2>
+                <h6>Asset Detail</h6>
+            </div>
+        </div>
+        <div class="box3">
+            <div class="row1">
+                <div class="box1" style="text-align: left;">
+                    <span class="text-label12">
+                          Printed Date
+                    </span>
+                    <span class="text-content12" th:text="${printedDate}">
+                    </span>
+                </div>
+                <div class="box2" style="text-align: right;">
+                    <span class="text-label12">
+                          Reporting Period
+                    </span>
+                    <span class="text-content12">
+                          01-31 Agustus 2024
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="box4">
+        <div style="padding-bottom: 15px;">
+            <span class="text-content14" th:text="${header.productDesc}" >Permata ME Saver IDR</span>
+        </div>
+        <div class="row1">
+            <div class="tbl1" style="text-align: left;">
+                <div style="padding-bottom: 15px;">
+                    <span class="text-label12">
+                              Account Holder
+                    </span> <br></br>
+                    <span class="text-content12" th:text="${header.shortName}" >Arya Wisnu Mahardika Nugraha</span>
+                </div>
+                <div style="padding-bottom: 15px;">
+                    <span class="text-label12">
+                              Account Opening Date
+                    </span> <br></br>
+                    <span class="text-content12" th:text="${header.acctOpenDate}"  >12-Jan-24</span>
+                </div>
+                <div style="padding-bottom: 15px;">
+                    <span class="text-label12">
+                              Hold Amount
+                    </span> <br></br>
+                    <span class="text-content12"   th:text="${header.availBalance}" >-</span>
+                </div>
+            </div>
+
+            <div class="tbl2" style="text-align: left;">
+                <div style="padding-bottom: 15px;">
+                    <span class="text-label12">
+                              Account Number
+                    </span> <br></br>
+                    <span class="text-content12" th:text="${header.acctNumber}">1234-7658-9120</span>
+                    (Active)
+                </div>
+                <div style="padding-bottom: 15px;">
+                    <span class="text-label12">
+                              Available Balance
+                    </span> <br></br>
+                    <span class="text-content12" th:text="${header.availBalance}"  >10.0000.000</span>
+                </div>
+                <div style="padding-bottom: 15px;">
+                    <span class="text-label12">
+                              Accrued Interest Amount
+                    </span> <br></br>
+                    <span class="text-content12" th:text="${header.accruedIntAmt}" >-</span>
+                </div>
+            </div>
+
+            <div class="tbl1" style="text-align: left;">
+                <div style="padding-bottom: 15px;">
+                    <span class="text-label12">
+                              Currency
+                    </span> <br></br>
+                    <span class="text-content12" th:text="${header.currency}" >IDR</span>
+                </div>
+                <div style="padding-bottom: 15px;">
+                    <span class="text-label12">
+                              Average Balance
+                    </span> <br></br>
+                    <span class="text-content12" th:text="${header.avgBalance}" >15,000,000.00</span>
+                </div>
+                <div style="padding-bottom: 15px;">
+                    <span class="text-label12">
+                              Branch
+                    </span> <br></br>
+                    <span class="text-content12" th:text="${header.branchOwnerName}" >KC Permata Bintaro</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="footer">
+    <div style="text-align: right;">
+        <span class="text-label10">Halaman <span class="page"></span> <b>/</b> <span class="pages"></span></span>
+    </div>
+
+    <div class="row2">
+        <div class="tbl1f" style="text-align: left; width: 300px;">
+            <span class="text-label10bold">PermataBank.com </span>
+            <span class="text-label10">| Permata Tel 1500-111 atau 021-2985-0611</span>
+        </div>
+        <div class="tbl2f" style="text-align: left; ">
+            <span class="text-label10">PT Bank Permata, Tbk. berizin dan diawasi oleh Otoritas Jasa Keuangan dan Bank Indonesia serta merupakan peserta penjaminan Lembaga Penjamin Simpanan.</span>
+        </div>
+        <div class="tbl3f" style="text-align: right;">
+            <img th:src="${logoBaseLps}" alt="Permata Logo" width="50px"/>
+        </div>
+    </div>
+</div>
+
+
+<div class="content">
+    <table>
+        <thead>
+        <tr>
+            <th style="width: 10%;">Transaction Date</th>
+            <th style="width: 10%;">Value Date</th>
+            <th>Transaction Description</th>
+            <th class="align-right" style="width: 10%;">Debit</th>
+            <th class="align-right" style="width: 10%;">Credit</th>
+            <th class="align-right" style="width: 10%;">Balance</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr class="font-kecil" th:each="item, iterStat: ${details}">
+            <td  th:text="${item.transactionDate}"></p></td>
+            <td  th:text="${item.valueDate}"></p></td>
+            <td  th:text="${item.transDesc}"></p>  </td>
+            <td class="align-right"  th:text="${item.debit}"></p></td>
+            <td class="align-right"  th:text="${item.credit}"></p></td>
+            <td class="align-right" th:text="${item.balance}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+
+
+
+
+
+</body>
+</html>
