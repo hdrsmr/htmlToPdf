@@ -1,0 +1,12 @@
+[
+  {
+    "name": "com.latihan.HtmlPdf.entity.Header",
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.latihan.HtmlPdf.entity.Detail",
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
+  }
+]
