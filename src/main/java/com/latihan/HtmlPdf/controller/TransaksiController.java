@@ -12,7 +12,6 @@ import org.apache.pdfbox.io.MemoryUsageSetting;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -30,6 +29,7 @@ import org.thymeleaf.context.Context;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -264,21 +264,25 @@ public class TransaksiController {
 
     @GetMapping("/memory/{limit}")
     public ResponseEntity<byte[]> memoryV(@PathVariable int limit) throws Exception {
-
-        long startTimeDB = System.currentTimeMillis();
+        ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
         Header header = transaksiService.getHeader("dadsdsd");
-        List<Detail> details = transaksiService.getDetails(limit);
-        long endTimeDB = System.currentTimeMillis();
-        logger.error("END LOAD DB with " + details.size() + " rows, Waktu eksekusi: " + (endTimeDB - startTimeDB) / 1000.0 + " detik");
+        CompletableFuture<List<Detail>> futureDetails = CompletableFuture.supplyAsync(() -> {
+            long startTimeDB = System.currentTimeMillis();
+            List<Detail> result = transaksiService.getDetails(limit);
+            long endTimeDB = System.currentTimeMillis();
+            logger.error("END LOAD DB with " + result.size() + " rows, Waktu eksekusi: " + (endTimeDB - startTimeDB) / 1000.0 + " detik");
+            return result;
+        }, executor);
 
+        // Ambil hasil List<Detail> secara sinkron (tunggu sampai selesai)
+        List<Detail> details = futureDetails.get();
         // Batch size lebih dinamis
         int availableProcessors = Runtime.getRuntime().availableProcessors();
         int batchSize = Math.min(5000, Math.max(2000, limit / (availableProcessors * 4)));
-        logger.error("availableProcessors : " + availableProcessors + " batchSize: " + batchSize);
+//        logger.error("availableProcessors : " + availableProcessors + " batchSize: " + batchSize);
         int totalRows = details.size();
         int batchCount = (int) Math.ceil((double) totalRows / batchSize);
 
-        ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
         CountDownLatch latch = new CountDownLatch(batchCount);
         List<byte[]> pdfBatches = Collections.synchronizedList(new ArrayList<>());
 
@@ -299,7 +303,6 @@ public class TransaksiController {
                     int fromIndex = batch * batchSize;
                     int toIndex = Math.min(fromIndex + batchSize, totalRows);
                     List<Detail> batchData = details.subList(fromIndex, toIndex);
-
                     // Gunakan Map dan Context per thread
                     Map<String, Object> localData = new HashMap<>(baseData);
                     localData.put("details", batchData);
@@ -347,7 +350,7 @@ public class TransaksiController {
         }
 
         long endTimeRender = System.currentTimeMillis();
-        logger.error("END CREATED PDF MEMORY with " + totalRows + " rows, Waktu: " + (endTimeRender - startTimeRender) / 1000.0 + " detik");
+        logger.error("END CREATED PDF MEMORY with " + totalRows + " rows, Waktu: " + (endTimeRender - startTimeRender) / 1000.0 + " ms");
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=final-report.pdf")
                 .contentType(MediaType.APPLICATION_PDF)

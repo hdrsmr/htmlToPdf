@@ -11,13 +11,10 @@ import java.util.List;
 @Repository
 public interface TransaksiRepo extends JpaRepository<Transaksi,Long> {
 
-    @Query(value = " select distinct A.PRODUCT_DESC ,A.SHORT_NAME ,A.ACCT_NUMBER ,'IDR' as CURRENCY , DATE_FORMAT(A.ACCT_OPEN_DATE,'%d-%m-%Y') ACCT_OPEN_DATE , FORMAT(A.AVAIL_BAL,0,'id_ID') AVAIL_BAL ,FORMAT(A.AGGR_CURR_BAL,0,'id_ID') AVG_BALANCE, FORMAT(coalesce(A.ACCRUED_INT_AMT,0),0,'id_ID')  ACCRUED_INT_AMT,\n" +
-            "A.BRANCH_OWNER_NAME, A.CIF_NUMBER , A.BATCH_DATE\n" +
-            "from casa_stmt_header a\n" +
-            "where \n" +
-            "a.GCN_NUMBER ='XOS0810000000284'\n" +
-            "and a.SOURCE_PRODUCT_TYPE ='D'\n" +
-            "and a.ACCT_NUMBER ='00216650565' ",nativeQuery = true)
+    @Query(value = "select distinct A.PRODUCT_DESC ,A.SHORT_NAME ,A.ACCT_NUMBER ,'IDR' as CURRENCY , DATE_FORMAT(A.ACCT_OPEN_DATE,'%d-%m-%Y') ACCT_OPEN_DATE , FORMAT(A.AVAIL_BAL,0,'id_ID') AVAIL_BAL ,FORMAT(A.AGGR_CURR_BAL,0,'id_ID') AVG_BALANCE, FORMAT(coalesce(A.ACCRUED_INT_AMT,0),0,'id_ID')  ACCRUED_INT_AMT, \n" +
+            "            A.BRANCH_OWNER_NAME, A.CIF_NUMBER , A.BATCH_DATE \n" +
+            "             from casa_stmt_header  a\n" +
+            "            limit 1 ",nativeQuery = true)
     List<Object[]> getDataHeader (@Param("actNumber") String actNumber);
 
 
